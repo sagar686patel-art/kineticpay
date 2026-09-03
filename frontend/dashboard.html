@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>KineticPay | Operator Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen">
+  <!-- Nav -->
+  <header class="border-b border-slate-800 bg-slate-900/50 backdrop-blur px-6 py-4 flex justify-between items-center sticky top-0 z-50">
+    <div class="flex items-center gap-3">
+      <span class="text-2xl font-black text-emerald-400">KINETIC<span class="text-white">PAY</span></span>
+      <span id="user-badge" class="text-xs bg-slate-800 text-slate-400 px-2.5 py-1 rounded border border-slate-700">Platform: Loading</span>
+    </div>
+    <div class="flex items-center gap-4">
+      <span id="user-greeting" class="text-sm font-medium text-slate-300">Operator: Loading</span>
+      <button onclick="logout()" class="text-xs bg-red-500/10 hover:bg-red-500/20 text-red-400 px-3 py-1.5 rounded border border-red-500/20">Sign Out</button>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto p-6 space-y-6">
+    <!-- Stat Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-1 h-full bg-emerald-500"></div>
+        <span class="text-xs uppercase text-slate-500 font-bold tracking-wider">Volatility Vault Balance</span>
+        <div id="card-buffer" class="text-3xl font-extrabold text-emerald-400 mt-1">₹0.00</div>
+        <p class="text-xs text-slate-400 mt-1">Autonomous escrow reserve against low shifts</p>
+      </div>
+      <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-1 h-full bg-amber-500"></div>
+        <span class="text-xs uppercase text-slate-500 font-bold tracking-wider">Active Micro-Loan</span>
+        <div id="card-loan" class="text-3xl font-extrabold text-amber-400 mt-1">₹0.00</div>
+        <p class="text-xs text-slate-400 mt-1">Automated 8% split-deduction per shift</p>
+      </div>
+      <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-1 h-full bg-indigo-500"></div>
+        <span class="text-xs uppercase text-slate-500 font-bold tracking-wider">Velocity Underwriting Limit</span>
+        <div id="card-credit" class="text-3xl font-extrabold text-indigo-400 mt-1">₹0.00</div>
+        <p class="text-xs text-slate-400 mt-1">Real-time ML capacity based on shift velocity</p>
+      </div>
+    </div>
+
+    <!-- Chart & Simulator -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- Chart -->
+      <div class="lg:col-span-2 bg-slate-900 border border-slate-800 p-6 rounded-xl flex flex-col justify-between">
+        <div>
+          <div class="flex justify-between items-center mb-1">
+            <h2 class="text-lg font-bold text-slate-200">Algorithmic Cash-Flow Stabilization</h2>
+            <span class="text-xs px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">Live Model Active</span>
+          </div>
+          <p class="text-xs text-slate-400 mb-4">Raw earnings volatility smoothed to a predictable baseline payout</p>
+        </div>
+        <div class="h-80">
+          <canvas id="cashflowChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Action Panel -->
+      <div class="bg-slate-900 border border-slate-800 p-6 rounded-xl space-y-4">
+        <div class="flex justify-between items-center">
+          <h2 class="text-lg font-bold text-slate-200">Shift Simulator</h2>
+          <button id="btn-seed" onclick="seedDemoData()" class="text-xs bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/30 px-2.5 py-1 rounded font-semibold transition">
+            ⚡ Seed 7-Day Demo
+          </button>
+        </div>
+        
+        <div>
+          <label class="text-xs text-slate-400">Raw Shift Earnings (₹)</label>
+          <input type="number" id="sim-earnings" value="1800" min="0" max="100000" step="0.01" required class="w-full mt-1 bg-slate-950 border border-slate-700 px-3 py-2 rounded text-sm text-slate-200">
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="text-xs text-slate-400">Hours Active</label>
+            <input type="number" id="sim-hours" value="9" min="0.25" max="24" step="0.25" required class="w-full mt-1 bg-slate-950 border border-slate-700 px-3 py-2 rounded text-sm text-slate-200">
+          </div>
+          <div>
+            <label class="text-xs text-slate-400">Trips Done</label>
+            <input type="number" id="sim-trips" value="18" min="0" max="500" step="1" required class="w-full mt-1 bg-slate-950 border border-slate-700 px-3 py-2 rounded text-sm text-slate-200">
+          </div>
+        </div>
+        <button onclick="triggerShiftSim()" class="w-full py-2.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded-lg transition text-sm shadow-lg shadow-emerald-500/20">
+          Process Shift Inflow
+        </button>
+
+        <hr class="border-slate-800 my-3">
+        
+        <!-- Emergency Advance -->
+        <h3 class="text-sm font-bold text-indigo-400">Instant Working Capital</h3>
+        <p class="text-xs text-slate-400">Underwritten using velocity score without credit bureau checks.</p>
+        <button onclick="requestMicroAdvance()" class="w-full py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-lg transition text-xs shadow-md shadow-indigo-600/20">
+          Request ₹2,000 Advance
+        </button>
+
+        <hr class="border-slate-800 my-3">
+
+        <!-- Parametric Weather Shield Feature -->
+        <h3 class="text-sm font-bold text-sky-400">Parametric Downtime Shield</h3>
+        <p class="text-xs text-slate-400">Simulate adverse weather event (42mm/hr rain) in active delivery zone.</p>
+        <button onclick="triggerParametricPayout()" class="w-full py-2 bg-sky-500/10 hover:bg-sky-500/20 text-sky-400 border border-sky-500/30 font-semibold rounded-lg transition text-xs">
+          🌧️ Trigger Weather Claim (₹350 Payout)
+        </button>
+      </div>
+    </div>
+
+    <!-- Audit Ledger / Transaction Breakdown -->
+    <div class="bg-slate-900 border border-slate-800 p-6 rounded-xl">
+      <h2 class="text-lg font-bold text-slate-200 mb-1">Shift Liquidity & Settlement Ledger</h2>
+      <p class="text-xs text-slate-400 mb-4">Complete audit trail of earnings, automated reserve transfers, and split debt settlements</p>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs text-slate-300">
+          <thead class="bg-slate-950 text-slate-400 uppercase tracking-wider border-b border-slate-800">
+            <tr>
+              <th class="p-3">Shift ID</th>
+              <th class="p-3">Raw Earnings</th>
+              <th class="p-3">Vault Action</th>
+              <th class="p-3">Loan Split (8%)</th>
+              <th class="p-3">Final Deposited Payout</th>
+              <th class="p-3">Status</th>
+            </tr>
+          </thead>
+          <tbody id="ledger-body" class="divide-y divide-slate-800/60 font-mono">
+            <tr>
+              <td colspan="6" class="p-4 text-center text-slate-500 font-sans">No shifts processed yet. Click 'Seed 7-Day Demo' above.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      initDashboard();
+    });
+  </script>
+</body>
+</html>

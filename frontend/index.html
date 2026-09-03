@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>KineticPay | Login & Register</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-slate-900 text-slate-100 flex items-center justify-center min-h-screen p-4">
+  <div class="bg-slate-800 border border-slate-700 w-full max-w-md p-8 rounded-2xl shadow-2xl">
+    <div class="text-center mb-8">
+      <h1 class="text-3xl font-black text-emerald-400 tracking-wider">KINETIC<span class="text-white">PAY</span></h1>
+      <p class="text-slate-400 text-sm mt-1">Autonomous Cash-Flow Stability for Gig Workers</p>
+    </div>
+
+    <!-- Toggle Buttons -->
+    <div class="flex bg-slate-700/50 p-1 rounded-lg mb-6">
+      <button id="tab-login" class="w-1/2 py-2 text-sm font-semibold rounded-md bg-emerald-500 text-slate-900" onclick="showTab('login')">Sign In</button>
+      <button id="tab-register" class="w-1/2 py-2 text-sm font-semibold rounded-md text-slate-300" onclick="showTab('register')">Register</button>
+    </div>
+
+    <!-- Login Form -->
+    <form id="form-login" onsubmit="handleLogin(event)" class="space-y-4">
+      <div>
+        <label class="text-xs uppercase text-slate-400 font-bold">Username</label>
+        <input type="text" id="login-username" required class="w-full mt-1 px-4 py-2.5 bg-slate-900 border border-slate-700 rounded-lg focus:outline-none focus:border-emerald-500">
+      </div>
+      <div>
+        <label class="text-xs uppercase text-slate-400 font-bold">Password</label>
+        <input type="password" id="login-password" required class="w-full mt-1 px-4 py-2.5 bg-slate-900 border border-slate-700 rounded-lg focus:outline-none focus:border-emerald-500">
+      </div>
+      <button type="submit" class="w-full py-3 mt-4 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded-lg transition-all">Enter Dashboard</button>
+    </form>
+
+    <!-- Register Form -->
+    <form id="form-register" onsubmit="handleRegister(event)" class="space-y-4 hidden">
+      <div>
+        <label class="text-xs uppercase text-slate-400 font-bold">Full Name</label>
+        <input type="text" id="reg-fullname" required class="w-full mt-1 px-4 py-2.5 bg-slate-900 border border-slate-700 rounded-lg focus:outline-none focus:border-emerald-500">
+      </div>
+      <div>
+        <label class="text-xs uppercase text-slate-400 font-bold">Platform</label>
+        <select id="reg-platform" class="w-full mt-1 px-4 py-2.5 bg-slate-900 border border-slate-700 rounded-lg focus:outline-none focus:border-emerald-500">
+          <option value="Zomato">Zomato</option>
+          <option value="Swiggy">Swiggy</option>
+          <option value="Uber">Uber</option>
+          <option value="Zepto">Zepto</option>
+        </select>
+      </div>
+      <div>
+        <label class="text-xs uppercase text-slate-400 font-bold">Username</label>
+        <input type="text" id="reg-username" required class="w-full mt-1 px-4 py-2.5 bg-slate-900 border border-slate-700 rounded-lg focus:outline-none focus:border-emerald-500">
+      </div>
+      <div>
+        <label class="text-xs uppercase text-slate-400 font-bold">Password</label>
+        <input type="password" id="reg-password" minlength="8" required class="w-full mt-1 px-4 py-2.5 bg-slate-900 border border-slate-700 rounded-lg focus:outline-none focus:border-emerald-500">
+      </div>
+      <button type="submit" class="w-full py-3 mt-4 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded-lg transition-all">Create Account</button>
+    </form>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
